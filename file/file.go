@@ -20,7 +20,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/meltwater/rabbitio/rmq"
+	"github.com/inside-track/rabbitio/rmq"
 	"github.com/spf13/afero"
 )
 

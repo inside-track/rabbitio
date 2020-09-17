@@ -22,7 +22,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/meltwater/rabbitio/rmq"
+	"github.com/inside-track/rabbitio/rmq"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/assert"
 )
