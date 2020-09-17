@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/meltwater/rabbitio/cmd"
+import "github.com/inside-track/rabbitio/cmd"
 
 // version is set on build
 var version = "undefined"

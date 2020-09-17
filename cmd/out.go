@@ -20,8 +20,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/meltwater/rabbitio/file"
-	"github.com/meltwater/rabbitio/rmq"
+	"github.com/inside-track/rabbitio/file"
+	"github.com/inside-track/rabbitio/rmq"
 	"github.com/spf13/cobra"
 )
 
