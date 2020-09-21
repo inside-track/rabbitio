@@ -23,7 +23,7 @@ import (
 
 var (
 	version                               string
-	uri, exchange, queue, tag, routingKey string
+	uri, exchange, queue, tag, routingKey, s3Bucket, awsKey, awsSecret string
 	prefetch                              int
 )
 
@@ -33,7 +33,7 @@ var RootCmd = &cobra.Command{
 	Short: "Rabbit IO will help backup and restore your messages in RabbitMQ",
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -51,6 +51,9 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&exchange, "exchange", "e", "", "Exchange to connect to")
 	RootCmd.PersistentFlags().StringVarP(&queue, "queue", "q", "", "Queue to connect to")
 	RootCmd.PersistentFlags().StringVarP(&routingKey, "routingkey", "r", "#", "Routing Key, if specified will override tarball routing key configuration")
-	RootCmd.PersistentFlags().StringVarP(&tag, "tag", "t", "Rabbit IO Connector "+version, "AMQP Client Tag")
+	RootCmd.PersistentFlags().StringVarP(&tag, "tag", "t", "Rabbit IO Connector " + version, "AMQP Client Tag")
+	RootCmd.PersistentFlags().StringVarP(&s3Bucket, "s3Bucket", "s", "", "S3 bucket to uplaod files to")
+	RootCmd.PersistentFlags().StringVarP(&awsKey, "awsKey", "k", "", "AWS Key Credential")
+	RootCmd.PersistentFlags().StringVarP(&awsSecret, "awsSecret", "w", "", "AWS Secret Credential")
 	RootCmd.PersistentFlags().IntVarP(&prefetch, "prefetch", "p", 100, "Prefetch for batches")
 }

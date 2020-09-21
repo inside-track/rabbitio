@@ -53,15 +53,6 @@ func NewConsumer(amqpURI, exchange, queue, routingKey, tag string, prefetch int)
 	if q.Messages == 0 {
 		log.Fatalf("No messages in RabbitMQ Queue: %s", q.Name)
 	}
-	if err = channel.QueueBind(
-		q.Name,     // name of the queue
-		routingKey, // bindingKey
-		exchange,   // sourceExchange
-		false,      // noWait
-		nil,        // arguments
-	); err != nil {
-		log.Fatalf("Queue Bind: %s", err)
-	}
 
 	r := &RabbitMQ{
 		conn:            conn,
@@ -90,7 +81,7 @@ func (r *RabbitMQ) Consume(out chan Message, verify <-chan Verify) {
 	deliveries, err := r.channel.Consume(
 		r.queue, // name
 		r.tag,   // consumerTag,
-		false,   // noAck
+		true,   // autoAck
 		false,   // exclusive
 		false,   // noLocal
 		false,   // noWait
@@ -108,6 +99,12 @@ func (r *RabbitMQ) Consume(out chan Message, verify <-chan Verify) {
 			RoutingKey:  d.RoutingKey,
 			Headers:     d.Headers,
 			DeliveryTag: d.DeliveryTag,
+		}
+
+		if err := d.Ack(false); err != nil {
+			log.Printf("Error acknowledging message : %s", err)
+		} else {
+			log.Printf("Acknowledged message.")
 		}
 		// write Message to channel
 		out <- msg
