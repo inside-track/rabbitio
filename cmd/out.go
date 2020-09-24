@@ -22,6 +22,7 @@ import (
 
 	"github.com/inside-track/rabbitio/file"
 	"github.com/inside-track/rabbitio/rmq"
+	"github.com/inside-track/rabbitio/awsHelper"
 	"github.com/spf13/cobra"
 )
 
@@ -46,6 +47,8 @@ var outCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		awsHelper.NewAWSHelper(awsKey, awsSecret, s3Bucket)
 
 		go rabbit.Consume(channel, verify)
 
