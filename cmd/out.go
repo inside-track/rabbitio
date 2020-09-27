@@ -20,9 +20,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/inside-track/rabbitio/awsHelper"
 	"github.com/inside-track/rabbitio/file"
 	"github.com/inside-track/rabbitio/rmq"
-	"github.com/inside-track/rabbitio/awsHelper"
 	"github.com/spf13/cobra"
 )
 
