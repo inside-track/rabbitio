@@ -18,6 +18,7 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
+	"path/filepath"
 	"fmt"
 	"io"
 	"log"
@@ -25,6 +26,7 @@ import (
 	"time"
 
 	"github.com/inside-track/rabbitio/rmq"
+	"github.com/inside-track/rabbitio/awsHelper"
 	"github.com/pborman/uuid"
 	"github.com/spf13/afero"
 )
@@ -142,7 +144,8 @@ func (t *TarballBuilder) Pack(messages chan rmq.Message, dir string, verify chan
 			t.gzip.Close()
 
 			// writes to tarball here when reached the t.tarSize
-			err := writeFile(t.buf.Bytes(), dir, fmt.Sprintf("%d_messages_%d.tgz", fileNum, docNum))
+			fileName := fmt.Sprintf("%s_%d_messages_%d.tgz", time.Now().String(), fileNum, docNum)
+			err := writeFile(t.buf.Bytes(), dir, fileName)
 			if err != nil {
 				return err
 			}
@@ -153,6 +156,9 @@ func (t *TarballBuilder) Pack(messages chan rmq.Message, dir string, verify chan
 				return err
 			}
 			docNum = 0
+
+			// upload file to S3
+			awsHelper.UploadToS3(filepath.Join(dir, fileName))
 		}
 
 		if err := t.addFile(t.tar, uuid.New()+".rio", &doc); err != nil {
@@ -166,10 +172,14 @@ func (t *TarballBuilder) Pack(messages chan rmq.Message, dir string, verify chan
 	fileNum++
 
 	// writes to tarball here when not reached the t.tarSize
-	err := writeFile(t.buf.Bytes(), dir, fmt.Sprintf("%d_messages_%d.tgz", fileNum, docNum))
+	fileName := fmt.Sprintf("%s_%d_messages_%d.tgz", time.Now().String(), fileNum, docNum)
+	err := writeFile(t.buf.Bytes(), dir, fileName)
 	if err != nil {
 		return err
 	}
+
+	// upload file to S3
+	awsHelper.UploadToS3(filepath.Join(dir, fileName))
 
 	// Does not ack the messages unless it is repeated, not sure why yet..
 	// Might want to change using delivery ack interface
