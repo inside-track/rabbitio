@@ -18,15 +18,15 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
-	"path/filepath"
 	"fmt"
 	"io"
 	"log"
+	"path/filepath"
 	"sync"
 	"time"
 
-	"github.com/inside-track/rabbitio/rmq"
 	"github.com/inside-track/rabbitio/awsHelper"
+	"github.com/inside-track/rabbitio/rmq"
 	"github.com/pborman/uuid"
 	"github.com/spf13/afero"
 )
