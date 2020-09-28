@@ -81,7 +81,7 @@ func (r *RabbitMQ) Consume(out chan Message, verify <-chan Verify) {
 	deliveries, err := r.channel.Consume(
 		r.queue, // name
 		r.tag,   // consumerTag,
-		true,   // autoAck
+		false,   // noAck
 		false,   // exclusive
 		false,   // noLocal
 		false,   // noWait
@@ -101,11 +101,6 @@ func (r *RabbitMQ) Consume(out chan Message, verify <-chan Verify) {
 			DeliveryTag: d.DeliveryTag,
 		}
 
-		if err := d.Ack(false); err != nil {
-			log.Printf("Error acknowledging message : %s", err)
-		} else {
-			log.Printf("Acknowledged message.")
-		}
 		// write Message to channel
 		out <- msg
 	}
